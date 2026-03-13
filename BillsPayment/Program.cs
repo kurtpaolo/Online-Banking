@@ -91,10 +91,10 @@ namespace BillsPayment
                         Environment.Exit(0);
                         break;
 
-                    //default:
-                    //    Console.WriteLine("Invalid Input!");
-                    //    Environment.Exit(0);
-                    //    break;
+                    default:
+                        Console.WriteLine("Invalid Input!");
+                        Environment.Exit(0);
+                        break;
                 }
 
                 Console.Write("Continue? (y/n): ");
