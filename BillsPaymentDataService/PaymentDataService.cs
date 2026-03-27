@@ -7,26 +7,26 @@ namespace BillsPaymentDataService
 {
     public class PaymentDataService
     {
-        private List<PaymentModels> storedPayments = new List<PaymentModels>();
-        private int referenceCounter = 0;
+        private IPaymentDataService dataServices;
 
+        public PaymentDataService(IPaymentDataService dataService)
+        {
+            dataServices = dataService;
+        }
 
         public void Add(PaymentModels payment)
         {
-            referenceCounter++;
-            payment.ReferenceNumber = $"{referenceCounter:000000000}";
-            payment.DatePaid = DateTime.Now;
-            storedPayments.Add(payment);
+            dataServices.Add(payment);
         }
 
         public PaymentModels? GetById(Guid paymentId)
         {
-            return storedPayments.FirstOrDefault(p => p.PaymentId == paymentId);
+            return dataServices.GetById(paymentId);
         }
 
         public List<PaymentModels> GetPayments()
         {
-            return storedPayments;
+            return dataServices.GetPayments();
         }
     }
 }
