@@ -1,6 +1,7 @@
-﻿using System;
-using BillsPaymentAppService;
+﻿using BillsPaymentAppService;
 using BillsPaymentModels;
+using System;
+using System.Security.Principal;
 
 namespace BillsPayment
 {
@@ -8,122 +9,191 @@ namespace BillsPayment
     {
         static void Main(string[] args)
         {
-            CreateAccount();
 
-            var app = new AccountAppService();
-            int attempts = 0;    
-            while (attempts < 3)
+            Console.WriteLine("Welcome to Redondo's Online Banking!");
+            Console.WriteLine("[1] Login");
+            Console.WriteLine("[2] Register");
+            Console.WriteLine("[3] Exit");
+            Console.Write("Enter choice: ");
+            string initialChoice = Console.ReadLine();
+
+            switch (initialChoice)
             {
-                Console.Write("Username: ");
-                string userInput = Console.ReadLine();
-                Console.Write("PIN: ");
-                string pinInput = Console.ReadLine();  
-                
-                var account = app.GetAccount(userInput, pinInput);
-
-                if (account != null)
-                {
-                    PaymentProcess();
+                case "1":
+                    LoginPage();
                     break;
+                case "2":
+                    CreateAccount();
+                    break;
+                case "3":
+                    Console.WriteLine("Thanks for using our service!");
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Invalid Input!");
+                    Environment.Exit(0);
+                    break;
+            }
+
+            static void LoginPage()
+            {
+
+                var app = new AccountAppService();
+                int attempts = 0, attemptsDisplay = 3;
+                
+                while (attempts < 3)
+                {
+                    Console.WriteLine("Please Login to Proceed");
+                    Console.Write("Username: ");
+                    string userInput = Console.ReadLine();
+                    Console.Write("PIN: ");
+                    string pinInput = Console.ReadLine();
+
+                    var account = app.GetAccount(userInput, pinInput);
+
+                    if (account != null)
+                    {
+                        PaymentProcess();
+                        break;
+                    }
+                    else
+                    {
+                        attemptsDisplay--;
+                        Console.WriteLine($"Incorrect Credentials! {attemptsDisplay} attempt/s left!");
+                        attempts++;
+                    }
+                }
+
+                if (attempts >= 3)
+                    Console.WriteLine("Too many requests! Please try again later.");
+                Environment.Exit(0);
+            }
+
+            static void CreateAccount()
+            {
+
+                var app = new AccountAppService();
+                string username = "";
+                string pin = "";
+
+                Console.WriteLine("Create Account");
+                Console.Write("Username: ");
+                username = Console.ReadLine();
+                Console.Write("Create a PIN: ");
+                pin = Console.ReadLine();
+
+                app.ProcessAccounts(username, pin);
+
+                Console.WriteLine("Account Successfully Created!");
+                Console.Write("Continue to Login? (y/n): ");
+                string continueLogin = Console.ReadLine();
+
+                if (continueLogin == "y")
+                {   
+                    
+                    LoginPage();
                 }
                 else
                 {
-                    Console.WriteLine("Incorrect Credentials!");
-                    attempts++;
+                    Console.WriteLine("Welcome to Redondo's Online Banking!");
+                    Console.WriteLine("[1] Login");
+                    Console.WriteLine("[2] Register");
+                    Console.WriteLine("[3] Exit");
+                    Console.Write("Enter choice: ");
+                    string initialChoice = Console.ReadLine();
+
+                    switch (initialChoice)
+                    {
+                        case "1":
+                            LoginPage();
+                            break;
+                        case "2":
+                            CreateAccount();
+                            break;
+                        case "3":
+                            Console.WriteLine("Thanks for using our service!");
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Input!");
+                            Environment.Exit(0);
+                            break;
+                    }
                 }
             }
 
-            if (attempts >= 3)
-                Console.WriteLine("Too many requests! Please try again later.");
-                Environment.Exit(0);
-        }
-
-        static void CreateAccount() {
-
-            var app = new AccountAppService();
-            string username = "";
-            string pin = "";
-
-            Console.WriteLine("Create Account");
-            Console.Write("Username: ");
-            username = Console.ReadLine();    
-            Console.Write("Create a PIN: ");
-            pin = Console.ReadLine();
-
-            app.ProcessAccounts(username, pin);
-        }
-
-        static void PaymentProcess()
-        {
-            var app = new PaymentAppService();
-            string morePayment = "y";
-
-            while (morePayment == "y")
+            static void PaymentProcess()
             {
-                Console.WriteLine("Welcome to Redondo's Online Banking!");
-                Console.WriteLine("[1] Pay Bills");
-                Console.WriteLine("[2] Show Payment History");
-                Console.WriteLine("[3] Exit");
-                Console.Write("Enter choice: ");
-                string choice = Console.ReadLine();
+                var app = new PaymentAppService();
+                string morePayment = "y";
 
-                switch (choice)
+                while (morePayment == "y")
                 {
-                    case "1":
-                        Console.Write("Recipient: ");
-                        string recipient = Console.ReadLine();
+                    Console.WriteLine("Welcome to Redondo's Online Banking!");
+                    Console.WriteLine("[1] Pay Bills");
+                    Console.WriteLine("[2] Show Payment History");
+                    Console.WriteLine("[3] Exit");
+                    Console.Write("Enter choice: ");
+                    string choice = Console.ReadLine();
 
-                        Console.Write("Amount: ");
-                        int amount = int.Parse(Console.ReadLine());
+                    switch (choice)
+                    {
+                        case "1":
+                            Console.Write("Recipient: ");
+                            string recipient = Console.ReadLine();
 
-                        Console.Write($"Pay {recipient} {amount}? Proceed? (y/n): ");
-                        string confirm = Console.ReadLine();
+                            Console.Write("Amount: ");
+                            int amount = int.Parse(Console.ReadLine());
 
-                        if (confirm == "y")
-                        {
-                            PaymentModels payment = app.ProcessPayment(recipient, amount);
-                            Console.WriteLine("Money Transfer Successful!");
-                            Console.WriteLine($"----------------------------------------\nRecipient: {payment.Recipient}\nAmount: {payment.Amount}\nDate & Time: {payment.DatePaid}\nReference Number: {payment.ReferenceNumber}\n----------------------------------------");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Payment cancelled.");
-                        }
-                        break;
+                            Console.Write($"Pay {recipient} {amount}? Proceed? (y/n): ");
+                            string confirm = Console.ReadLine();
 
-                    case "2":
-                        var history = app.GetPaymentHistory();
-                        if (history.Count == 0)
-                        {
-                            Console.WriteLine("No payment history.");
-                        }
-
-                        else
-                        {
-                            Console.WriteLine("Payment History:");
-                            foreach (var paymentHistory in history)
+                            if (confirm == "y")
                             {
-                                Console.WriteLine($"----------------------------------------\nRecipient: {paymentHistory.Recipient}\nAmount: {paymentHistory.Amount}\nDate & Time: {paymentHistory.DatePaid}\nReference Number: {paymentHistory.ReferenceNumber}\nd----------------------------------------\n");
+                                PaymentModels payment = app.ProcessPayment(recipient, amount);
+                                Console.WriteLine("Money Transfer Successful!");
+                                Console.WriteLine($"----------------------------------------\nRecipient: {payment.Recipient}\nAmount: {payment.Amount}\nDate & Time: {payment.DatePaid}\nReference Number: {payment.ReferenceNumber}\n----------------------------------------");
                             }
-                        }
-                        break;
+                            else
+                            {
+                                Console.WriteLine("Payment cancelled.");
+                            }
+                            break;
 
-                    case "3":
-                        Console.WriteLine("Thanks for using our service!");
-                        Environment.Exit(0);
-                        break;
+                        case "2":
+                            var history = app.GetPaymentHistory();
+                            if (history.Count == 0)
+                            {
+                                Console.WriteLine("No payment history.");
+                            }
 
-                    default:
-                        Console.WriteLine("Invalid Input!");
-                        Environment.Exit(0);
-                        break;
+                            else
+                            {
+                                Console.WriteLine("Payment History:");
+                                foreach (var paymentHistory in history)
+                                {
+                                    Console.WriteLine($"----------------------------------------\nRecipient: {paymentHistory.Recipient}\nAmount: {paymentHistory.Amount}\nDate & Time: {paymentHistory.DatePaid}\nReference Number: {paymentHistory.ReferenceNumber}\n----------------------------------------\n");
+                                }
+                            }
+                            break;
+
+                        case "3":
+                            Console.WriteLine("Thanks for using our service!");
+                            Environment.Exit(0);
+                            break;
+
+                        default:
+                            Console.WriteLine("Invalid Input!");
+                            Environment.Exit(0);
+                            break;
+                    }
+
+                    Console.Write("Continue? (y/n): ");
+                    morePayment = Console.ReadLine();
                 }
 
-                Console.Write("Continue? (y/n): ");
-                morePayment = Console.ReadLine();
+                Console.WriteLine("Thank you for using our service!");
             }
-
-            Console.WriteLine("Thank you for using our service!");
         }
     }
 }
