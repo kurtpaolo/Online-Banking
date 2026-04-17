@@ -19,14 +19,10 @@ namespace BillsPaymentDataService
             dataServices.Add(payment);
         }
 
-        public PaymentModels? GetById(Guid paymentId)
-        {
-            return dataServices.GetById(paymentId);
-        }
-
         public List<PaymentModels> GetPayments()
         {
             return dataServices.GetPayments();
         }
+
     }
 }

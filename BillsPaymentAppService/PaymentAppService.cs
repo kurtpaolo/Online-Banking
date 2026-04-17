@@ -14,11 +14,10 @@ namespace BillsPaymentAppService
             PaymentModels payment = new PaymentModels
             {
                 Recipient = recipient,
-                Amount = amount
+                Amount = amount,
             };
 
             paymentDataService.Add(payment);
-
             return payment;
         }
 
@@ -26,10 +25,7 @@ namespace BillsPaymentAppService
         {
             return paymentDataService.GetPayments();
         }
-
-        public PaymentModels? GetPayment(Guid paymentId)
-        {
-            return paymentDataService.GetById(paymentId);
-        }
     }
 }
+
+

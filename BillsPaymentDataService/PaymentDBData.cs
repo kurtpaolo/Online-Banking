@@ -16,16 +16,15 @@ namespace BillsPaymentDataService
             using var conn = new MySqlConnection(connStr);
             conn.Open();
 
-            string sql = "INSERT INTO payments VALUES (@id, @recipient, @amount, @datePaid, @reference)";
+            string sql = "INSERT INTO payments VALUES (@Merchant, @Amount, @DatePaid, @Reference)";
             var insertCommand = new MySqlCommand(sql, conn);
 
             payment.DatePaid = DateTime.Now;
 
-            insertCommand.Parameters.AddWithValue("@id", payment.PaymentId.ToString());
-            insertCommand.Parameters.AddWithValue("@recipient", payment.Recipient);
-            insertCommand.Parameters.AddWithValue("@amount", payment.Amount);
-            insertCommand.Parameters.AddWithValue("@datePaid", payment.DatePaid);
-            insertCommand.Parameters.AddWithValue("@reference", payment.ReferenceNumber);
+            insertCommand.Parameters.AddWithValue("@Merchant", payment.Recipient);
+            insertCommand.Parameters.AddWithValue("@Amount", payment.Amount);
+            insertCommand.Parameters.AddWithValue("@DatePaid", payment.DatePaid);
+            insertCommand.Parameters.AddWithValue("@Reference", payment.ReferenceNumber);
             insertCommand.ExecuteNonQuery();
         }
 
@@ -44,8 +43,7 @@ namespace BillsPaymentDataService
             {
                 list.Add(new PaymentModels
                 {
-                    PaymentId = Guid.Parse(reader["PaymentId"].ToString()),
-                    Recipient = reader["Recipient"].ToString(),
+                    Recipient = reader["Merchant"].ToString(),
                     Amount = Convert.ToDouble(reader["Amount"]),
                     DatePaid = Convert.ToDateTime(reader["DatePaid"]),
                     ReferenceNumber = reader["ReferenceNumber"].ToString()
@@ -53,11 +51,6 @@ namespace BillsPaymentDataService
             }
 
             return list;
-        }
-
-        public PaymentModels? GetById(Guid paymentId)
-        {
-            return GetPayments().FirstOrDefault(p => p.PaymentId == paymentId);
         }
     }
 }

@@ -12,13 +12,7 @@ namespace BillsPaymentDataService
             referenceCounter++;
             payment.ReferenceNumber = $"{referenceCounter:000000000}";
             payment.DatePaid = DateTime.Now;
-
             storedPayments.Add(payment);
-        }
-
-        public PaymentModels? GetById(Guid paymentId)
-        {
-            return storedPayments.FirstOrDefault(p => p.PaymentId == paymentId);
         }
 
         public List<PaymentModels> GetPayments()

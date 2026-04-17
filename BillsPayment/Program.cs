@@ -8,33 +8,54 @@ namespace BillsPayment
     {
         static void Main(string[] args)
         {
-            string pin = "1214";
-            int attempts = 0;
+            CreateAccount();
 
+            var app = new AccountAppService();
+            int attempts = 0;    
             while (attempts < 3)
             {
-                Console.Write("PIN (Enter 1214 for the meantime): ");
-                string input = Console.ReadLine();
+                Console.Write("Username: ");
+                string userInput = Console.ReadLine();
+                Console.Write("PIN: ");
+                string pinInput = Console.ReadLine();  
+                
+                var account = app.GetAccount(userInput, pinInput);
 
-                if (input == pin)
+                if (account != null)
                 {
                     PaymentProcess();
                     break;
                 }
                 else
                 {
-                    Console.WriteLine("Incorrect PIN!");
+                    Console.WriteLine("Incorrect Credentials!");
                     attempts++;
                 }
             }
 
             if (attempts >= 3)
-                Console.WriteLine("Too many requests!");
+                Console.WriteLine("Too many requests! Please try again later.");
+                Environment.Exit(0);
+        }
+
+        static void CreateAccount() {
+
+            var app = new AccountAppService();
+            string username = "";
+            string pin = "";
+
+            Console.WriteLine("Create Account");
+            Console.Write("Username: ");
+            username = Console.ReadLine();    
+            Console.Write("Create a PIN: ");
+            pin = Console.ReadLine();
+
+            app.ProcessAccounts(username, pin);
         }
 
         static void PaymentProcess()
         {
-            var service = new PaymentAppService();
+            var app = new PaymentAppService();
             string morePayment = "y";
 
             while (morePayment == "y")
@@ -60,7 +81,7 @@ namespace BillsPayment
 
                         if (confirm == "y")
                         {
-                            PaymentModels payment = service.ProcessPayment(recipient, amount);
+                            PaymentModels payment = app.ProcessPayment(recipient, amount);
                             Console.WriteLine("Money Transfer Successful!");
                             Console.WriteLine($"----------------------------------------\nRecipient: {payment.Recipient}\nAmount: {payment.Amount}\nDate & Time: {payment.DatePaid}\nReference Number: {payment.ReferenceNumber}\n----------------------------------------");
                         }
@@ -71,11 +92,12 @@ namespace BillsPayment
                         break;
 
                     case "2":
-                        var history = service.GetPaymentHistory();
+                        var history = app.GetPaymentHistory();
                         if (history.Count == 0)
                         {
                             Console.WriteLine("No payment history.");
                         }
+
                         else
                         {
                             Console.WriteLine("Payment History:");
