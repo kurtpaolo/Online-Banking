@@ -7,7 +7,7 @@ namespace BillsPaymentAppService
 {
     public class PaymentAppService
     {
-        private PaymentDataService paymentDataService = new PaymentDataService(new PaymentInMemoryData());
+        private PaymentDataService paymentDataService = new PaymentDataService(new PaymentJsonData());
 
         public PaymentModels ProcessPayment(string recipient, int amount)
         {

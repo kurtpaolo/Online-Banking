@@ -5,7 +5,7 @@ namespace BillsPaymentAppService
 {
     public class AccountAppService
     {
-        private AccountDataService accountDataService = new AccountDataService(new AccountInMemory());
+        private AccountDataService accountDataService = new AccountDataService(new AccountJsonData());
 
         public AccountModels ProcessAccounts(string username, string pin)
         {

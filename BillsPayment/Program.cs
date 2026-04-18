@@ -9,7 +9,11 @@ namespace BillsPayment
     {
         static void Main(string[] args)
         {
+            HomePage();
+        }
 
+        static void HomePage()
+        {
             Console.WriteLine("Welcome to Redondo's Online Banking!");
             Console.WriteLine("[1] Login");
             Console.WriteLine("[2] Register");
@@ -37,11 +41,11 @@ namespace BillsPayment
                     Console.WriteLine("Invalid Input!");
                     Environment.Exit(0);
                     break;
-            }
 
+            }
             static void AdminPage()
             {
-                Console.WriteLine("Welcome to the Admin Page!");
+                Console.WriteLine("\nWelcome to the Admin Page!");
                 Console.WriteLine("[1] View All Accounts");
                 Console.WriteLine("[2] View All Payments");
                 Console.WriteLine("[3] Exit");
@@ -54,14 +58,33 @@ namespace BillsPayment
                         var accounts = accountAppService.GetAllAccounts();
                         if (accounts.Count == 0)
                         {
-                            Console.WriteLine("No accounts found.");
+                            Console.WriteLine("\nNo accounts found!");
                         }
                         else
                         {
-                            Console.WriteLine("Accounts:");
+                            Console.WriteLine("\nAccounts:");
                             foreach (var account in accounts)
                             {
                                 Console.WriteLine($"Username: {account.Username}, PIN: {account.PIN}");
+                            }
+
+                            Console.WriteLine("\nProceed to:");
+                            Console.WriteLine("[1] Home");
+                            Console.WriteLine("[3] Exit");
+                            string option = Console.ReadLine();
+                            if (option == "1")
+                            {
+                                HomePage();
+                            }
+                            else if (option == "2")
+                            {
+                                Console.WriteLine("\nThanks for using our service!");
+                                Environment.Exit(0);
+                            }
+                            else
+                            {
+                                Console.WriteLine("\nInvalid Input! Exiting...");
+                                Environment.Exit(0);
                             }
                         }
                         break;
@@ -70,17 +93,38 @@ namespace BillsPayment
                         var payments = paymentAppService.GetPaymentHistory();
                         if (payments.Count == 0)
                         {
-                            Console.WriteLine("No payments found.");
+                            Console.WriteLine("\nNo payments found!");
                         }
                         else
                         {
-                            Console.WriteLine("Payments:");
+                            Console.WriteLine("\nPayments:");
                             foreach (var payment in payments)
                             {
                                 Console.WriteLine($"Recipient: {payment.Recipient}, Amount: {payment.Amount}, Date & Time: {payment.DatePaid}, Reference Number: {payment.ReferenceNumber}");
                             }
                         }
-                        break;
+
+                        Console.WriteLine("\nProceed to:");
+                        Console.WriteLine("[1] Home");
+                        Console.WriteLine("[2] Exit");
+                        Console.Write("Enter choice: ");
+                        string options = Console.ReadLine();
+
+                        if (options == "1")
+                        {
+                            HomePage();
+                        }
+                        else if (options == "2")
+                        {
+                            Console.WriteLine("Thanks for using our service!");
+                            Environment.Exit(0);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid Input! Exiting...");
+                            Environment.Exit(0);
+                        }
+                            break;
                     case "3":
                         Console.WriteLine("Thanks for using our service!");
                         Environment.Exit(0);
@@ -101,11 +145,12 @@ namespace BillsPayment
                 
                 while (attempts < 3)
                 {
-                    Console.WriteLine("Please Login to Proceed");
+                    Console.WriteLine("\nPlease Login to Proceed");
                     Console.Write("Username: ");
                     string userInput = Console.ReadLine();
                     Console.Write("PIN: ");
                     string pinInput = Console.ReadLine();
+                    Console.WriteLine("");
 
                     var account = app.GetAccount(userInput, pinInput);
 
@@ -124,7 +169,7 @@ namespace BillsPayment
 
                 if (attempts >= 3)
                     Console.WriteLine("Too many requests! Please try again later.");
-                Environment.Exit(0);
+                    Environment.Exit(0);
             }
 
             static void CreateAccount()
@@ -134,11 +179,12 @@ namespace BillsPayment
                 string username = "";
                 string pin = "";
 
-                Console.WriteLine("Create Account");
+                Console.WriteLine("\nCreate Account");
                 Console.Write("Username: ");
                 username = Console.ReadLine();
                 Console.Write("Create a PIN: ");
                 pin = Console.ReadLine();
+                Console.WriteLine();
 
                 app.ProcessAccounts(username, pin);
 
@@ -153,30 +199,7 @@ namespace BillsPayment
                 }
                 else
                 {
-                    Console.WriteLine("Welcome to Redondo's Online Banking!");
-                    Console.WriteLine("[1] Login");
-                    Console.WriteLine("[2] Register");
-                    Console.WriteLine("[3] Exit");
-                    Console.Write("Enter choice: ");
-                    string initialChoice = Console.ReadLine();
-
-                    switch (initialChoice)
-                    {
-                        case "1":
-                            LoginPage();
-                            break;
-                        case "2":
-                            CreateAccount();
-                            break;
-                        case "3":
-                            Console.WriteLine("Thanks for using our service!");
-                            Environment.Exit(0);
-                            break;
-                        default:
-                            Console.WriteLine("Invalid Input!");
-                            Environment.Exit(0);
-                            break;
-                    }
+                    HomePage();
                 }
             }
 
@@ -187,12 +210,14 @@ namespace BillsPayment
 
                 while (morePayment == "y")
                 {
-                    Console.WriteLine("Welcome to Redondo's Online Banking!");
+                    Console.WriteLine("Hello! Would you like to: ");
                     Console.WriteLine("[1] Pay Bills");
                     Console.WriteLine("[2] Show Payment History");
-                    Console.WriteLine("[3] Exit");
+                    Console.WriteLine("[3] Home");
+                    Console.WriteLine("[4] Exit");
                     Console.Write("Enter choice: ");
                     string choice = Console.ReadLine();
+                    Console.WriteLine("");
 
                     switch (choice)
                     {
@@ -209,7 +234,7 @@ namespace BillsPayment
                             if (confirm == "y")
                             {
                                 PaymentModels payment = app.ProcessPayment(recipient, amount);
-                                Console.WriteLine("Money Transfer Successful!");
+                                Console.WriteLine("\nMoney Transfer Successful!");
                                 Console.WriteLine($"----------------------------------------\nRecipient: {payment.Recipient}\nAmount: {payment.Amount}\nDate & Time: {payment.DatePaid}\nReference Number: {payment.ReferenceNumber}\n----------------------------------------");
                             }
                             else
@@ -222,20 +247,22 @@ namespace BillsPayment
                             var history = app.GetPaymentHistory();
                             if (history.Count == 0)
                             {
-                                Console.WriteLine("No payment history.");
+                                Console.WriteLine("\nNo payment history.");
                             }
 
                             else
                             {
-                                Console.WriteLine("Payment History:");
+                                Console.WriteLine("\nPayment History:");
                                 foreach (var paymentHistory in history)
                                 {
                                     Console.WriteLine($"----------------------------------------\nRecipient: {paymentHistory.Recipient}\nAmount: {paymentHistory.Amount}\nDate & Time: {paymentHistory.DatePaid}\nReference Number: {paymentHistory.ReferenceNumber}\n----------------------------------------\n");
                                 }
                             }
                             break;
-
                         case "3":
+                            HomePage();
+                            break;
+                        case "4":
                             Console.WriteLine("Thanks for using our service!");
                             Environment.Exit(0);
                             break;
@@ -250,7 +277,7 @@ namespace BillsPayment
                     morePayment = Console.ReadLine();
                 }
 
-                Console.WriteLine("Thank you for using our service!");
+                HomePage();
             }
         }
     }
