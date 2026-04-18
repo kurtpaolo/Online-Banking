@@ -48,6 +48,7 @@ namespace BillsPayment
                 Console.WriteLine("\nWelcome to the Admin Page!");
                 Console.WriteLine("[1] View All Accounts");
                 Console.WriteLine("[2] View All Payments");
+                Console.WriteLine("[3] Home");
                 Console.WriteLine("[3] Exit");
                 Console.Write("Enter choice: ");
                 string adminChoice = Console.ReadLine();
@@ -70,7 +71,8 @@ namespace BillsPayment
 
                             Console.WriteLine("\nProceed to:");
                             Console.WriteLine("[1] Home");
-                            Console.WriteLine("[3] Exit");
+                            Console.WriteLine("[2] Exit");
+                            Console.Write("Enter Choice: ");
                             string option = Console.ReadLine();
                             if (option == "1")
                             {
@@ -99,7 +101,7 @@ namespace BillsPayment
                         {
                             Console.WriteLine("\nPayments:");
                             foreach (var payment in payments)
-                            {
+                            {   
                                 Console.WriteLine($"Recipient: {payment.Recipient}, Amount: {payment.Amount}, Date & Time: {payment.DatePaid}, Reference Number: {payment.ReferenceNumber}");
                             }
                         }
@@ -126,6 +128,9 @@ namespace BillsPayment
                         }
                             break;
                     case "3":
+                        HomePage();
+                        break;
+                    case "4":
                         Console.WriteLine("Thanks for using our service!");
                         Environment.Exit(0);
                         break;
@@ -169,7 +174,7 @@ namespace BillsPayment
 
                 if (attempts >= 3)
                     Console.WriteLine("Too many requests! Please try again later.");
-                    Environment.Exit(0);
+                    HomePage();
             }
 
             static void CreateAccount()
