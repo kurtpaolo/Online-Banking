@@ -6,5 +6,6 @@ namespace BillsPaymentDataService
     {
         void Add(AccountModels account);
         AccountModels? GetByUsernameAndPin(string createUsername, string createPIN);
+        List<AccountModels> GetAccounts();
     }
 }

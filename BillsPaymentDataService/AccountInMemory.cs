@@ -15,5 +15,10 @@ namespace BillsPaymentDataService
         {
             return accounts.FirstOrDefault(a => a.Username == username && a.PIN == pin);
         }
+
+        public List<AccountModels> GetAccounts()
+        {
+            return accounts;
+        }
     }
 }

@@ -20,5 +20,10 @@ namespace BillsPaymentDataService
         {
             return dataServices.GetByUsernameAndPin(username, pin);
         }
+
+        public List<AccountModels> GetAccounts()
+        {
+            return dataServices.GetAccounts();
+        }
     }
 }

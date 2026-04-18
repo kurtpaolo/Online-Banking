@@ -5,7 +5,7 @@ namespace BillsPaymentAppService
 {
     public class AccountAppService
     {
-        private AccountDataService accountDataService = new AccountDataService(new AccountDBData());
+        private AccountDataService accountDataService = new AccountDataService(new AccountInMemory());
 
         public AccountModels ProcessAccounts(string username, string pin)
         {
@@ -22,6 +22,11 @@ namespace BillsPaymentAppService
         public AccountModels? GetAccount(string username, string pin)
         {
             return accountDataService.GetByUsernameAndPin(username, pin);
+        }
+
+        public List<AccountModels> GetAllAccounts()
+        {
+            return accountDataService.GetAccounts();
         }
     }
 }

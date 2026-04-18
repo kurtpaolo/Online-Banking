@@ -45,5 +45,24 @@ namespace BillsPaymentDataService
 
             return null;
         }
+
+        public List<AccountModels> GetAccounts()
+        {
+            var accounts = new List<AccountModels>();
+            using var conn = new MySqlConnection(connStrAccount);
+            conn.Open();
+            string sql = "SELECT * FROM accounts";
+            var cmd = new MySqlCommand(sql, conn);
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                accounts.Add(new AccountModels
+                {
+                    Username = reader["Username"].ToString(),
+                    PIN = reader["Pin"].ToString()
+                });
+            }
+            return accounts;
+        }
     }
 }

@@ -18,7 +18,7 @@ namespace BillsPaymentDataService
 
         private void Save(List<AccountModels> accounts)
         {
-            var json = JsonSerializer.Serialize(accounts, new JsonSerializerOptions {WriteIndented = true});
+            var json = JsonSerializer.Serialize(accounts, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(fileName, json);
         }
 
@@ -33,6 +33,11 @@ namespace BillsPaymentDataService
         {
             var accounts = Load();
             return accounts.FirstOrDefault(a => a.Username == username && a.PIN == pin);
+        }
+
+        public List<AccountModels> GetAccounts()
+        {
+            return Load();
         }
     }
 }
