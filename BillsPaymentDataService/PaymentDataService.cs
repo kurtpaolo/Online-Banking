@@ -9,6 +9,7 @@ namespace BillsPaymentDataService
     {
         private IPaymentDataService dataServices;
 
+
         public PaymentDataService(IPaymentDataService dataService)
         {
             dataServices = dataService;
@@ -24,5 +25,14 @@ namespace BillsPaymentDataService
             return dataServices.GetPayments();
         }
 
+        public PaymentModels? GetByReference(string reference)
+        {
+            return dataServices.GetByReference(reference);
+        }
+
+        public bool RemoveByReference(string referenceNumber)
+        {
+            return dataServices.RemoveByReference(referenceNumber);
+        }
     }
 }

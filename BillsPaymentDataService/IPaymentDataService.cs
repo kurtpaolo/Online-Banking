@@ -6,5 +6,7 @@ namespace BillsPaymentDataService
     {
         void Add(PaymentModels payment);
         List<PaymentModels> GetPayments();
+        PaymentModels? GetByReference(string reference);
+        bool RemoveByReference(string referenceNumber);
     }
 }

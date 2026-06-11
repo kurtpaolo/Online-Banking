@@ -15,6 +15,7 @@ namespace BillsPaymentAppService
             {
                 Recipient = recipient,
                 Amount = amount,
+                DatePaid = DateTime.Now,
             };
 
             paymentDataService.Add(payment);
@@ -24,6 +25,16 @@ namespace BillsPaymentAppService
         public List<PaymentModels> GetPaymentHistory()
         {
             return paymentDataService.GetPayments();
+        }
+
+        public PaymentModels? GetPaymentByReference(string reference)
+        {
+            return paymentDataService.GetByReference(reference);
+        }
+
+        public bool RemovePayment(string referenceNumber)
+        {
+            return paymentDataService.RemoveByReference(referenceNumber);
         }
     }
 }
